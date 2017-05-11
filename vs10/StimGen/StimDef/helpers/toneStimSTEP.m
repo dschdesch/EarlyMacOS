@@ -249,6 +249,7 @@ end
 % waveform is generated @ the target SPL. Scaling is divided
 % between numerical scaling and analog attenuation later on.
 Amp = Amp*dB2A(StepFactor); % numerical linear amplitudes of the carrier ...
+SPL = SPL + StepFactor;
 if isModulated, Amp = Amp.*[ModDepth/200 1 ModDepth/200]; end %.. and sidebands if any
 % Compute phase of numerical waveform at start of onset, i.e., first sample of rising portion of waveform.
 StartPhase = EndPhase; % fine structure delay is realized in freq domain
@@ -274,17 +275,17 @@ end
 wtone_step = ExactGate(wtone_step, Fsam, StoreDur-GateDelay, GateDelay, RiseDur, FallDur,max(wtone),0);
 %set(gcf,'units', 'normalized', 'position', [0.519 0.189 0.438 0.41]); %xdplot(dt,wtone, 'color', rand(1,3)); error kjhkjh
 
-
+BurstDur = BurstDur-StepDelay;
 % parameters stored w waveform. Mainly for debugging purposes.
 NsamHead_step = NgateDelay + Nrise; % # samples in any gating delay + risetime portion
-Nsam_step = CollectInStruct(NonsetDelay, NgateDelay, Nrise, Nsteady, Nfall_step, NsamHead);
+Nsam = CollectInStruct(NonsetDelay_step, NgateDelay_step, Nrise_step, Nsteady_step, Nfall_step, NsamHead_step);
 Durs = CollectInStruct(BurstDur, RiseDur, FallDur, OnsetDelay, GateDelay, SteadyDur, FallDur,StepDelay);
 Delays = CollectInStruct(FineDelay, GateDelay, ModDelay, OnsetDelay);
-Param = CollectInStruct(C, Nsam, Durs, Delays, freq, Amp, StartPhase, SPL, useCyclicStorage);
-
+ParamStep = CollectInStruct(C, Nsam, Durs, Delays, freq, Amp, StartPhase, SPL, useCyclicStorage);
+Params = CollectInStruct(Param,ParamStep);
 % Patch together the segments of the tone, using the cycled storage format,
 % or the fake version of it.
-W = Waveform(Fsam, DAchan, NaN, SPL, Param, ...
+W = Waveform(Fsam, DAchan, NaN, SPL, Params, ...
     {0              wtone(1:NsamHead)  wtone(NsamHead+(1:NsamCyc))   wtone(NsamHead+NsamCyc+1:end) ...
      0              wtone_step(1:NsamHead_step)  wtone_step(NsamHead_step+(1:NsamCyc_step))   wtone_step(NsamHead_step+NsamCyc_step+1:end)},...
     [NonsetDelay    1                  NrepCyc                       1 ...
