@@ -217,8 +217,8 @@ Param = CollectInStruct(C, Nsam, Durs, Delays, freq, Amp, StartPhase, SPL, useCy
 % Compute the phase at the end of the first burst/ start phase of the
 % second burst
 Time = (round(StoreDur*Fsam/1e3)-1).'/Fsam;
-phaseRad = 2*pi*StartPhase;
-EndPhase = -1*cos(phaseRad + 2*pi*freq*Time);
+phaseRad = StartPhase;
+EndPhase = phaseRad + freq*Time;
 
 SteadyDur = BurstDur-StepDelay-RiseDur-FallDur;
 if SteadyDur < 0
