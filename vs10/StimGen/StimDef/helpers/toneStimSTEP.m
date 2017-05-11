@@ -218,14 +218,14 @@ Param = CollectInStruct(C, Nsam, Durs, Delays, freq, Amp, StartPhase, SPL, useCy
 % second burst
 Time = (round(StoreDur*Fsam/1e3)-1).'/Fsam;
 phaseRad = 2*pi*StartPhase;
-EndPhase = cos(phaseRad + 2*pi*freq*Time);
+EndPhase = -1*cos(phaseRad + 2*pi*freq*Time);
 
 SteadyDur = BurstDur-StepDelay-RiseDur-FallDur;
 if SteadyDur < 0
    error('tonestimSTEP.m:  Duration of step < 0. Check timiming!!'); 
 end
 [NonsetDelay_step, NgateDelay_step, Nrise_step, Nsteady_step, Nfall_step] = ...
-    NsamplesofChain([OnsetDelay, GateDelay, RiseDur, SteadyDur, FallDur], Fsam/1e3);
+    NsamplesofChain([0, GateDelay, RiseDur, SteadyDur, FallDur], Fsam/1e3);
 
 % For uniformity, cast literal storage in the form of a fake cyclic storage
 useCyclicStorage = C.CyclesDoHelp && (Nsteady>=C.Nsam);
