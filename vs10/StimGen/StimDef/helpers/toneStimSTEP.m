@@ -228,11 +228,11 @@ end
     NsamplesofChain([0, GateDelay, RiseDur, SteadyDur, FallDur], Fsam/1e3);
 
 % For uniformity, cast literal storage in the form of a fake cyclic storage
-useCyclicStorage = C.CyclesDoHelp && (Nsteady>=C.Nsam);
+useCyclicStorage = C.CyclesDoHelp && (Nsteady_step>=C.Nsam);
 if useCyclicStorage, % cyclic storage
-    NsamCyc = C.Nsam;  % # samples in cyclic buffer
-    NrepCyc = floor(Nsteady/NsamCyc); % # reps of cyclic buffer
-    NsamTail = rem(Nsteady,NsamCyc); % Tail containing remainder of cycles
+    NsamCyc_step = C.Nsam;  % # samples in cyclic buffer
+    NrepCyc_step = floor(Nsteady_step/NsamCyc_step); % # reps of cyclic buffer
+    NsamTail_step = rem(Nsteady_step,NsamCyc_step); % Tail containing remainder of cycles
     Fcar = C.FcarProx; Fmod = C.FmodProx; % actual frequencies used in waveforms
 else, % literal storage: phrase as single rep of cyclic buffer + empty tail buffer
     NsamCyc_step = Nsteady_step;  % total # samples in steady-state portion
