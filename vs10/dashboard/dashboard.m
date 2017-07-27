@@ -315,7 +315,7 @@ S = marginalize(S,[20 5]);
 function B = local_StimButton(StimName);
 % set the color of the Buttons 
 stimNamesGreen = {'BBFC' 'BBFM' 'BBFB' 'ITD' 'ILD' 'MBL' 'NITD' 'NRHO' ...
-    'MOVN' 'ARMIN' 'HP' 'NSAM'};
+    'MOVN' 'ARMIN' 'HP' 'NSAM' 'CAP'};
 if isempty(find(ismember(stimNamesGreen, StimName)))
     rand('state', varname2int('FS'));
     CLR = rand(1,3); 
