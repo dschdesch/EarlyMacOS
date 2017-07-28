@@ -105,10 +105,35 @@ end
 %Bovendien ook op monaurale gegevens het cyclehistogram berekenen ...
 DisSub = [];
 fprintf('Calculating Correlogram and Cyclehistogram for : ');
+
+spt1 = spiketimes(ds1);
+inter = round(CalcParam.coranwin./ds1.ISI);
+if inter(1)==0
+    inter(1)=1;
+end
+remove = [];
+for i=inter(1):inter(2)
+    for j=1:size(spt1,1)
+        if isempty(spt1{j,i});
+            remove = [remove j];
+        end
+    end
+end
+spt2 = spiketimes(ds2);
+for i=1:inter
+    for j=1:size(spt2,1)
+        if isempty(spt2{j,i});
+            remove = [remove j];
+        end
+    end
+end
+remove = unique(remove);
+StimFreq(remove) = [];
+ComSub(:,remove) = [];
+NSub = size(ComSub,2);
+
 for n = 1:NSub
     fprintf([int2str(StimFreq(n)) 'Hz,']);
-    spt1 = spiketimes(ds1);
-    spt2 = spiketimes(ds2);
     SpkTr1 = spt1(ComSub(1, n), :);
 	SpkTr2 = spt2(ComSub(2, n), :);
     N = length(SpkTr1);
@@ -164,7 +189,9 @@ for n = 1:NSub
         DisSub = [DisSub n]; 
     end
 end
+
 fprintf('\b.\n');
+
 
 if ~isempty(DisSub) %Indien er subsequenties wegvallen ... 
     StimFreq(DisSub) = [];
@@ -179,11 +206,21 @@ end
 
 for n = 1:length(ds1.Stim.Fcar)
     MonCycleHist1(n) = SGSR_cyclehist(ds1, n, -1, CalcParam.cyclenbin, CalcParam.coranwin(1), CalcParam.coranwin(2));
+    if sum(MonCycleHist1(n).Y) == 0
+       fprintf('Subssequence with frequency %dHz has no spikes in dataset 1\n',ds1.Stim.Fcar(n));
+       MonCycleHist1(n).Y = [];
+    end
 end
 
 for n = 1:length(ds2.Stim.Fcar)
     MonCycleHist2(n) = SGSR_cyclehist(ds2, n, -1, CalcParam.cyclenbin, CalcParam.coranwin(1), CalcParam.coranwin(2));
+    if sum(MonCycleHist1(n).Y) == 0
+       fprintf('Subssequence with frequency %dHz has no spikes in dataset 2\n',ds1.Stim.Fcar(n));
+       MonCycleHist2(n).Y = [];
+    end
 end
+
+
 
 %Composite Curve berekenen ...
 X = CrossCor(1).X;
@@ -376,7 +413,7 @@ end
 P = polyfit(X, Y, 1);
 Slope = P(1)*1000; YInterSect = P(2);
 idx = find(ismember(X, IPC.X));
-[pCorrCoef, CorrCoef] = signcorr(IPC.Y, Y(idx)); 
+[pCorrCoef, CorrCoef] = signcorr(IPC.Y, Y); 
 
 PD = CollectInStruct(X, Y, iRayleigh, Slope, YInterSect, pCorrCoef, CorrCoef);
 
@@ -530,8 +567,7 @@ ComIndepVar = ds1freq(common_indexes(:,1));
 if isempty(ComIndepVar), ComSub = []; return; end
 
 ComSub(1,:) = find(common_indexes(:,1)==1);
-ComSub(2,:) = indices_loc;
-
+ComSub(2,:) = indices_loc(ComSub(1,:));
 
 %--------%
 % PLOTCC %

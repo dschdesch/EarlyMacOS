@@ -92,9 +92,10 @@ function x = localApplyNorm(x, NC, normStr)
 %Apply normalization ...
 
 if ~isempty(normStr),
-   if ~isfield(NC, normStr), error(['"' normStr '" is not a known normalization mode.']); end;
-   NormVal = getfield(NC, normStr);
-   x = x/NormVal; 
+    if ~isfield(NC, normStr), error(['"' normStr '" is not a known normalization mode.']); end;
+    NormVal = getfield(NC, normStr);
+    x = x/NormVal;
 end
 
-%--------------------------------------------------------------------------
+
+% --------------------------------------------------------------

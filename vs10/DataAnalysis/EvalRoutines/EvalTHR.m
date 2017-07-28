@@ -239,7 +239,7 @@ end
 function PlotThrCurve(ds, CalcData, Param)
 
 %Reorganization of information ...
-IDStr = sprintf('%s <%s> (#%d)', ds.FileName, ds.SeqID, ds.iSeq);
+IDStr = sprintf('%s <%s> (#%d)', ds.ID.Experiment.ID.Name, [num2str(ds.ID.iCell) '-' num2str(ds.ID.iRecOfCell) '-' ds.StimType], ds.ID.iDataset);
 if strcmpi(Param.xunit, 'hz') || (strcmpi(Param.xunit, 'auto') && (CalcData.thr.cf <= 1000))
     [Xorig, Yorig] = deal(CalcData.thr.freq, CalcData.thr.thr);
     if ~strcmpi(Param.fit, 'none')

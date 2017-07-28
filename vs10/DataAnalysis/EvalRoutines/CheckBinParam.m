@@ -50,7 +50,7 @@ LUTentry.StorageType = 'Fbeat';
 LUTentry.FieldName   = 'fbeatmod,fbeat';
 LUT = [LUT; LUTentry];
 
-LUTentry.StimType    = 'NTD';
+LUTentry.StimType    = 'NITD';
 LUTentry.ParamType   = 'ITD';
 LUTentry.StorageType = 'Tdiff';
 LUTentry.FieldName   = 'indepval';
@@ -514,7 +514,7 @@ try %Extract channel mapping from UserDataInterface(UDI) ...
 	% 	end
 	
 	switch lower(dsType),
-		case {'sgsr', 'idf/spk','earlyds'}
+		case {'earlyds'}
 			Chan1atEar = lower(getDSEntryFromUserdata(ds, 'Chan1'));
 			
 			%
@@ -540,24 +540,25 @@ catch MException
 		case 'wrongvalue', warning(sprintf('Channel mapping for cell %d in userdata of datafile ''%s'' is not valid.  Trying to extract mapping from dataset.', CellNr, DataFile)); end
 		
 		switch dsType,
-			case 'sgsr',
-				if isfield(ds.SessionInfo, 'leftDACear')
-					Chan1atEar = ds.SessionInfo.leftDACear;
-					if any(strncmpi(Chan1atEar, {'l', 'r'}, 1))
-						Chan1atEar = lower(Chan1atEar(1));
-					else
-						error('Channel mapping derived from dataset is invalid.');
-					end
-				else
-					Chan1atEar = 'l';
-				end
-			case 'idf/spk'
-				Chan1atEar = 'l';
-			case 'edf'
-				error('Channel mapping could not be determined for supplied dataset.');
+% 			case 'sgsr',
+% 				if isfield(ds.SessionInfo, 'leftDACear')
+% 					Chan1atEar = ds.SessionInfo.leftDACear;
+% 					if any(strncmpi(Chan1atEar, {'l', 'r'}, 1))
+% 						Chan1atEar = lower(Chan1atEar(1));
+% 					else
+% 						error('Channel mapping derived from dataset is invalid.');
+% 					end
+% 				else
+% 					Chan1atEar = 'l';
+% 				end
+% 			case 'idf/spk'
+% 				Chan1atEar = 'l';
+% 			case 'edf'
+% 				error('Channel mapping could not be determined for supplied dataset.');
             case 'EarlyDS'
-                error('EARLY:Critical',['No Channelmapping found in userdata.' ...
-                    'Early datasets do not contain Channelmap. Please edit the userdata']);
+                Chan1atEar = 'l';
+%                 error('EARLY:Critical',['No Channelmapping found in userdata.' ...
+%                     'Early datasets do not contain Channelmap. Please edit the userdata']);
 		end
 end
 

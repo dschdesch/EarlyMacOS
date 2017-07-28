@@ -196,8 +196,12 @@ end
 %Retrieve and calculate threshold curve information ...
 % Thr(1) = RetrieveThrInfo(Info.ds1p.filename, Info.ds1p.icell);
 % Thr(2) = RetrieveThrInfo(Info.ds2p.filename, Info.ds2p.icell);
-Thr(1) = getThr4Cell(Info.ds1p.filename, Info.ds1p.icell); 
-Thr(2) = getThr4Cell(Info.ds2p.filename, Info.ds2p.icell); 
+% Thr(1) = getThr4Cell(Info.ds1p.filename, Info.ds1p.icell); 
+ds1p = read(dataset, Info.ds1p.filename,Info.ds1p.iseq);
+Thr(1) = getThr4Cell(ds1p.Experiment, Info.ds1p.icell);
+ds2p = read(dataset, Info.ds2p.filename,Info.ds2p.iseq);
+% Thr(2) = getThr4Cell(Info.ds2p.filename, Info.ds2p.icell); 
+Thr(2) = getThr4Cell(ds2p.Experiment, Info.ds2p.icell); 
 %fast and ugly fix for compatibility
 for n = 1:length(Thr)
     if iscell(Thr(n).str)
@@ -208,12 +212,12 @@ end
 
 
 %Extract rate curve information ...
-RC(1) = CalcRC(Spt{1:2}, Param);
-RC(2) = CalcRC(Spt{3:4}, Param);
+RC(1) = CalcRC(Spt(1),Spt(2), Param);
+RC(2) = CalcRC(Spt(3),Spt(4),Param);
 
 %Calculate correlograms ...
-[SXAC(1), DAC(1)] = CalcAC(Spt{1:2}, Thr(1), Param);
-[SXAC(2), DAC(2)] = CalcAC(Spt{3:4}, Thr(2), Param);
+[SXAC(1), DAC(1)] = CalcAC(Spt(1),Spt(2), Thr(1), Param);
+[SXAC(2), DAC(2)] = CalcAC(Spt(3), Spt(4), Thr(2), Param);
 if strncmpi(Param.calctype, 's', 1)
     [SXCC, DCC] = CalcCC(Spt{:}, Thr, Param);
 else
@@ -384,7 +388,7 @@ if strcmpi(Param.subseqinput, 'subseq'),
 else
     IndepVals = InputVec; iSubSeqs = NaN*zeros(1, Nds);
     for n = find(~isnan(IndepVals))
-       idx = eval(sprintf('find(%s.indepval == IndepVals(%d));', dsNames{n}, n));
+       idx = eval(sprintf('find(%s.Stim.Presentation.X.PlotVal == IndepVals(%d));', dsNames{n}, n));
        if ~isempty(idx) && (length(idx) == 1)
            iSubSeqs(n) = idx;
        else
@@ -396,45 +400,46 @@ end
 %Assembling spiketrains ...
 Spt = cell(Nds, 1);
 for n = find(~isnan(iSubSeqs))
-    Spt{n} = eval(sprintf('%s.spt(iSubSeqs(%d), :);', dsNames{n}, n));
+   spt1 = eval(sprintf('spiketimes(%s)', dsNames{n}));
+   Spt{n} = spt1{iSubSeqs(n)};
 end
 
 %Assembling dataset information ...
-Info.ds1p.filename  = lower(ds1p.filename);
-Info.ds1p.icell     = ds1p.icell;
-Info.ds1p.iseq      = ds1p.iseq;
-Info.ds1p.seqid     = lower(ds1p.seqid);
+Info.ds1p.filename  = lower(ds1p.ID.Experiment.ID.Name);
+Info.ds1p.icell     = ds1p.ID.iCell;
+Info.ds1p.iseq      = ds1p.ID.iDataset;
+Info.ds1p.seqid     = lower([num2str(ds1p.ID.iCell) '-' num2str(ds1p.ID.iRecOfCell) '-' ds1p.StimType]);
 Info.ds1p.isubseq   = iSubSeqs(1);
 Info.ds1p.indepval  = IndepVals(1);
-Info.ds1p.indepunit = ds1p.indepunit;
+Info.ds1p.indepunit = ds1p.Stim.Presentation.X.ParUnit;
 
 if ~isvoid(ds1n)
-    Info.ds1n.iseq = ds1n.iseq;
+    Info.ds1n.iseq = ds1n.ID.iDataset;
 else
     Info.ds1n.iseq = NaN;
 end
-Info.ds1n.seqid     = lower(ds1n.seqid);
+Info.ds1n.seqid     = lower([num2str(ds1n.ID.iCell) '-' num2str(ds1n.ID.iRecOfCell) '-' ds1n.StimType]);
 Info.ds1n.isubseq   = iSubSeqs(2);
 Info.ds1n.indepval  = IndepVals(2);
-Info.ds1n.indepunit = ds1n.indepunit;
+Info.ds1n.indepunit = ds1n.Stim.Presentation.X.ParUnit;
 
-Info.ds2p.filename  = lower(ds2p.filename);
-Info.ds2p.icell     = ds2p.icell;
-Info.ds2p.iseq      = ds2p.iseq;
-Info.ds2p.seqid     = lower(ds2p.seqid);
+Info.ds2p.filename  = lower(ds2p.ID.Experiment.ID.Name);
+Info.ds2p.icell     = ds2p.ID.iCell;
+Info.ds2p.iseq      = ds2p.ID.iDataset;
+Info.ds2p.seqid     = lower([num2str(ds2p.ID.iCell) '-' num2str(ds2p.ID.iRecOfCell) '-' ds2p.StimType]);
 Info.ds2p.isubseq   = iSubSeqs(3);
 Info.ds2p.indepval  = IndepVals(3);
-Info.ds2p.indepunit = ds2p.indepunit;
+Info.ds2p.indepunit = ds2p.Stim.Presentation.X.ParUnit;
 
 if ~isvoid(ds2n)
-    Info.ds2n.iseq = ds2n.iseq;
+    Info.ds2n.iseq = ds2n.ID.iDataset;
 else
     Info.ds2n.iseq = NaN;
 end
-Info.ds2n.seqid     = lower(ds2n.seqid);
+Info.ds2n.seqid     = lower([num2str(ds2n.ID.iCell) '-' num2str(ds2n.ID.iRecOfCell) '-' ds2n.StimType]);
 Info.ds2n.isubseq   = iSubSeqs(4);
 Info.ds2n.indepval  = IndepVals(4);
-Info.ds2n.indepunit = ds2n.indepunit;
+Info.ds2n.indepunit = ds2n.Stim.Presentation.X.ParUnit;
 
 if isnan(Info.ds1n.isubseq)
     Info.idstr1 = sprintf('%s %s#%d@%.0f%s', upper(Info.ds1p.filename), ...
@@ -521,15 +526,15 @@ for n = 1:Nds,
     if ~isnan(iSubSeqs(n)) , 
         %If stimulus or repetition duration are not the same for different channels then
         %the minimum value is used ...
-        StimParam.burstdur(n) = round(min(ds.burstdur));
-        StimParam.repdur(n) = round(min(ds.repdur));
-        StimParam.nrep(n) = round(min(ds.nrep));
+        StimParam.burstdur(n) = round(min(ds.Stim.BurstDur));
+        StimParam.repdur(n) = round(min(ds.Stim.ISI));
+        StimParam.nrep(n) = round(min(ds.Stim.Presentation.Nrep));
         SPL = GetSPL(ds); StimParam.spl(:, n) = round(SPL(iSubSeqs(n), [1, end])');
     end
 end
-StimParam.avgspl1 = CombineSPLs(deNaN(StimParam.spl(:, [1 2]))');
-StimParam.avgspl2 = CombineSPLs(deNaN(StimParam.spl(:, [3 4]))');
-StimParam.avgspl  = CombineSPLs(deNaN(StimParam.spl(:))');
+StimParam.avgspl1 = CombineSPLs(denan(StimParam.spl(:, [1 2]))');
+StimParam.avgspl2 = CombineSPLs(denan(StimParam.spl(:, [3 4]))');
+StimParam.avgspl  = CombineSPLs(denan(StimParam.spl(:))');
 
 %Format stimulus parameters ...
 s = sprintf('BurstDur = %s ms', mat2str(StimParam.burstdur));
@@ -593,8 +598,8 @@ RC.str = sprintf('AvgR = %s', Param2Str(RC.mean, 'spk/sec', 0));
 function [SXAC, DAC] = CalcAC(SptP, SptN, Thr, Param)
 
 WinDur = abs(diff(Param.anwin)); %Duration of analysis window in ms ...
-SptP = ANWIN(SptP, Param.anwin);
-SptN = ANWIN(SptN, Param.anwin);
+SptP = anwin(SptP, Param.anwin);
+SptN = anwin(SptN, Param.anwin);
 
 if ~isempty(SptN),
     %Correlation of noise token A+ responses of a cell with the responses of that same cell to that same noise
@@ -913,10 +918,10 @@ end
 function [SXCC, DCC] = CalcCC(Spt1P, Spt1N, Spt2P, Spt2N, Thr, Param)
 
 WinDur = abs(diff(Param.anwin)); %Duration of analysis window in ms ...
-Spt1P = ANWIN(Spt1P, Param.anwin);
-Spt1N = ANWIN(Spt1N, Param.anwin);
-Spt2P = ANWIN(Spt2P, Param.anwin);
-Spt2N = ANWIN(Spt2N, Param.anwin);
+Spt1P = anwin(Spt1P, Param.anwin);
+Spt1N = anwin(Spt1N, Param.anwin);
+Spt2P = anwin(Spt2P, Param.anwin);
+Spt2N = anwin(Spt2N, Param.anwin);
 
 if ~isempty(Spt1N) && ~isempty(Spt2N),
     %Correlation of noise token A+ responses of a cell with the responses of another cell to that same noise
@@ -972,7 +977,7 @@ if ~isempty(Spt1N) && ~isempty(Spt2N),
     FFTscc.Magn.dB = FFTscc.Magn.dB/2;
     
     %Determine which dominant frequency to be used in the calculation ...
-    DomFreq = DetermineCalcDF(Param.calcdf, mean(deNaN(cat(2, Thr.cf))), FFTdif.DF, FFTscc.DF);
+    DomFreq = DetermineCalcDF(Param.calcdf, mean(denan(cat(2, Thr.cf))), FFTdif.DF, FFTscc.DF);
     %Dominant period in ms ...
     if (DomFreq ~= 0)
         DomPer = 1000/DomFreq;

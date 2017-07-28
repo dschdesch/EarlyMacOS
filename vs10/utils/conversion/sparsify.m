@@ -18,7 +18,8 @@ while 1,
     iout = setdiff(I,itry);
     Yr = interp1(X(itry), Y(itry), X);
     idev = intersect(iout, find(abs(Yr-Y)>maxDev*0.8));
-    I = sort(union(itry,idev))';
+    I = sort(union(itry,idev));
+    I = I(:)';
     if numel(I)>0.85*N0, break; end
 end
 

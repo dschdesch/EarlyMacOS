@@ -112,7 +112,7 @@ elseif (nargin == 1) && ischar(varargin{1}) && strcmpi(varargin{1}, 'clrcache')
     EmptyCacheFile(mfilename);
     return;
 else
-    [ds1, ds2, Spt1, Spt2, Info, StimParam, Param] = ParseArgs(DefParam,...
+[ds1, ds2, Spt1, Spt2, Info, StimParam, Param] = ParseArgs(DefParam,...
         varargin{:}); 
 end
 
@@ -242,7 +242,7 @@ end
 %% Return output if requested ...
 if (nargout > 0), 
     nspike1 = CalcData.ds1.nspike;
-    rate1 = 	CalcData.ds1.spkrate;
+    rate1 = CalcData.ds1.spkrate;
     nspike2 = CalcData.ds2.nspike;
     rate2 = CalcData.ds2.spkrate;
     [CalcData.ds1] = deal(Info.ds1);
