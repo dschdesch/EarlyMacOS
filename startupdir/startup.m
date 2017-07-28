@@ -39,6 +39,7 @@ versiondir = findversiondir(EarlyRoot); % findversiondir must reide in startupdi
 
 % update to new version if present.
 versiondir = EarlyUpgrade(versiondir);
+
 % not all dirs under versiondir need to be in path; also some path settings
 % may be conditional on local setup features, users, etc. This is handled
 % by EarlyPath in the init/ dir.
