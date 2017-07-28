@@ -63,10 +63,13 @@ addpath(fullfile(VD, 'DataAnalysis'));
 %addpath(fullfile(VD, 'DataAnalysis', 'RuesAM'));
 addpath(fullfile(VD, 'DataAnalysis', 'xfeature'));
 addpath(fullfile(VD, 'DataAnalysis', 'ZWOAE'));
+addpath(fullfile(VD, 'DataAnalysis', 'EvalRoutines'));
+addpath(fullfile(VD, 'DataAnalysis', 'GenCalcFnc'));
 addpath(fullfile(VD, 'DataAnalysis', 'SGSR'));
 addpath(fullfile(VD, 'DataAnalysis', 'CVdata'));
 addpath(fullfile(VD, 'DataAnalysis', 'CVdata', 'DP_phase'));
 addpath(fullfile(VD, 'DataAnalysis', 'JLdata'));
+addpath(fullfile(VD, 'DataAnalysis', 'Plot'));
 addpath(fullfile(VD, 'DataAnalysis', 'TKdata'));
 addpath(fullfile(VD, 'DataAnalysis', 'JSdata'));
 addpath(fullfile(VD, 'DataAnalysis', 'CAP'));
@@ -74,7 +77,9 @@ addpath(fullfile(VD, 'DataAnalysis', 'DataviewHelpers'));
 addpath(fullfile(VD, 'DataAnalysis', 'ZWOAE', 'TDTgerbil'));
 addpath(fullfile(VD, 'DataAnalysis', 'SPTcorr'));
 addpath(fullfile(VD, 'DataAnalysis', 'SPTcorr', 'SPTcorrMEX'));
-
+addpath(fullfile(VD, 'DataAnalysis', 'strfun'));
+addpath(fullfile(VD, 'DataAnalysis', 'specific'));
+addpath(fullfile(VD, 'DataAnalysis', 'Tools'));
 % addpath(fullfile(VD, 'Hardware', 'Multiclamp'));
 % addpath(fullfile(VD, 'Hardware', 'Polytec'));
 
