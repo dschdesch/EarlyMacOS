@@ -1,4 +1,4 @@
-function [D, dt, t0, DataType] = anadata(DS, Chan, iCond, iRep, Twin);
+function [D, dt, t0, DataType] = anadata(DS, myexpname, Chan, iCond, iRep, Twin);
 % Dataset/anadata - extract analog data from Dataset
 %    D = anadata(DS, Chan, iCond) returns the AD data from channel Chan
 %    that correspond to a single stimulus condition iCond. A matrix D is 
@@ -28,6 +28,8 @@ function [D, dt, t0, DataType] = anadata(DS, Chan, iCond, iRep, Twin);
 %
 %    See also StimPresent, Dataset/anamean, Dataset/anavar,
 %      adc_data/Samples, Dataset/baseline.
+
+%  modified by Hsin-Wei Lu on 29/oct/2017 to adapt to Unix system
 
 [iRep, Twin] = arginDefaults('iRep/Twin', 0, []); % default: all reps; max time window
 iRep = replaceMatch(iRep,{[], 0, ':'}, 0); % standardize "all reps" value
@@ -91,7 +93,14 @@ for ii=1:numel(ipres),
         NsamRead = iAnwin1-iAnwin0;
         ioffset = ioffset + iAnwin0;
     end
-    [d, dt, t0, DataType] = samples(AD, ioffset+1, ioffset+NsamRead);
+%%    % file folder that contains .bin files, added by Hsin-Wei Lu
+    % 29/oct/2017
+    mydatadir = datadir;
+    Ddir = sprintf('%s%s',mydatadir, myexpname);
+    [d, dt, t0, DataType] = hwl_samples(AD, ioffset+1, ioffset+NsamRead, Ddir);
+%%  deleted because following does not work on Unix system
+%    [d, dt, t0, DataType] = samples(AD, ioffset+1, ioffset+NsamRead);
+%%
     %dsize(D,d)
     D = [D, d];
 end

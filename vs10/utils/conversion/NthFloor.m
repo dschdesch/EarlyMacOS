@@ -16,8 +16,9 @@ if any(DX<=0),
     error('Xfloor must be monotonically increasing.');
 end
     
-% 
-Xfloor = [-inf Xfloor(:).' inf];
+% edited by Hsin-Wei Lu 29/Oct/2017
+%Xfloor = [-inf Xfloor(:).' inf];   % this causes errors in Matlab R2017b
+Xfloor = [min(Xfloor)-1e10 Xfloor(:).' max(Xfloor)+1e10 ];  % this does not 
 N = numel(Xfloor);
 % first round to nearest element of Xfloor, using indices
     

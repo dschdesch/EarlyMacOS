@@ -25,7 +25,7 @@ Alltests = {'any' 'figure' 'uicontrol' 'axes'};
 error(errMess);
 
 
-mess = numericTest(h, 'nonnegative', [Descr ' is ']);
+mess = numericTest(h, 'nonnegative', [Descr ' is ']); 
 if ~isempty(mess), return; end
 
 mess = dimensionTest(h, 'singlevalue', Descr);

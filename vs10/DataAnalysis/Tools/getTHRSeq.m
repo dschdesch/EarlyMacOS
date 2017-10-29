@@ -67,7 +67,9 @@ function thr_recordings = local_get_thr(Exp,cellNr)
     thr_recordings = {};
     % Open the log file
 %     log_file_name = [folder(Exp) filesep Exp.ID.Name '.log'];
-    log_file_name = [ 'C:\ExpData\Exp' filesep Exp.ID.Name filesep Exp.ID.Name '.log'];
+%    log_file_name = [ 'C:\ExpData\Exp' filesep Exp.ID.Name filesep
+%    Exp.ID.Name '.log']; % deleted by Hsin-Wei Lu 29/Oct/2017
+    log_file_name = [ datadir filesep Exp.ID.Name filesep Exp.ID.Name '.log'];  % edited by Hsin-Wei Lu 29/oct/2017
     fid = fopen (log_file_name,'rt');
 
     if fid == -1
