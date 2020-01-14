@@ -151,7 +151,8 @@ end
 data_struct.x = x;
 data_struct.y = y;
 data_struct.max_info = max_info;
-data_struct.LegStr = LegStr;
+%data_struct.LegStr = LegStr; deleted by hsin-wei 31/oct/2017, causing
+%errors
 data_struct.ylabel = 'rate (spikes/s)';
 data_struct.xlabel = [lower(X.ParName) ' ('  X.ParUnit ')'];
 data_struct.ylim = [0 inf];

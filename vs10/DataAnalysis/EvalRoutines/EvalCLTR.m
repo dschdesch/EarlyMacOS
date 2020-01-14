@@ -118,6 +118,7 @@ Thr = getThr4Cell(DS.Experiment, DSParam.cellnr, Param.ignoreuserdata, Param.thr
 %Perform actual calculations ...
 NPlots = length(IndepVal);
 for n = 1:NPlots
+    disp(['plot:' num2str(n)]);  % added by Hsin-Wei to debug
     CalcData(n) = CalcCurves(Spt(n, :), Param, StimParam(n)); 
 end    
 

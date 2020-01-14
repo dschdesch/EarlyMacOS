@@ -38,7 +38,7 @@ EarlyRoot = fileparts(startupdir); % parent dir
 versiondir = findversiondir(EarlyRoot); % findversiondir must reide in startupdir; we have no EARLY path yet
 
 % update to new version if present.
-versiondir = EarlyUpgrade(versiondir);
+% versiondir = EarlyUpgrade(versiondir); %% deleted by Hsin-Wei 16Jan2018
 
 % not all dirs under versiondir need to be in path; also some path settings
 % may be conditional on local setup features, users, etc. This is handled

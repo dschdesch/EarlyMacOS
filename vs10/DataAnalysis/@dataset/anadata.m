@@ -1,4 +1,4 @@
-function [D, dt, t0, DataType] = anadata(DS, myexpname, Chan, iCond, iRep, Twin);
+function [D, dt, t0, DataType] = anadata(DS, Chan, iCond, iRep, Twin);
 % Dataset/anadata - extract analog data from Dataset
 %    D = anadata(DS, Chan, iCond) returns the AD data from channel Chan
 %    that correspond to a single stimulus condition iCond. A matrix D is 
@@ -41,6 +41,12 @@ end
 AD = anachan(DS, Chan); % appropriate field of DS.Data
 StimPres = DS.Stim.Presentation;
 
+%%    % file folder that contains .bin files, added by Hsin-Wei Lu
+    % 29/oct/2017
+    mydatadir = datadir;
+    Ddir = fullfile(mydatadir, expname(DS));
+%%
+
 % check whether requested conditions and reps are valid
 if (iCond<1) || (iCond>StimPres.Ncond);
     error('Stimulus-condition index iCond exceeds data dimensions.');
@@ -79,7 +85,10 @@ else,
 end
 if isempty(ipres), % return empty array + other outputs
     D = zeros(nsamRep,0);
-    [dum, dt, t0, DataType] = samples(AD, 0,-1);
+    % following line deleted by HWL because it does not work on his mac
+ %   [dum, dt, t0, DataType] = samples(AD, 0,-1);
+    % HWL added following line for his mac
+    [dum, dt, t0, DataType] = hwl_samples(AD, 0,-1,Ddir);
 end
 for ii=1:numel(ipres),
     nsamRep = StimPres.NsamPres(ipres(ii));
@@ -95,8 +104,6 @@ for ii=1:numel(ipres),
     end
 %%    % file folder that contains .bin files, added by Hsin-Wei Lu
     % 29/oct/2017
-    mydatadir = datadir;
-    Ddir = sprintf('%s%s',mydatadir, myexpname);
     [d, dt, t0, DataType] = hwl_samples(AD, ioffset+1, ioffset+NsamRead, Ddir);
 %%  deleted because following does not work on Unix system
 %    [d, dt, t0, DataType] = samples(AD, ioffset+1, ioffset+NsamRead);

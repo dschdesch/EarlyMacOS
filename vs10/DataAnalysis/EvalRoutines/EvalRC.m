@@ -223,7 +223,7 @@ function RC = CalcRC(ds, Param)
 %Calculating rate level function ...
 S = CalcRATE(ds, 'isubseqs', Param.isubseqs, 'anwin', Param.anwin);
 RC.db      = S.curve.indepval;
-RC.a       = DB2A(S.curve.indepval);
+RC.a       = dB2A(S.curve.indepval);
 RC.n       = S.curve.n;
 RC.rate    = S.curve.rate;
 [RC.dbatmin, RC.min] = getmaxloc(RC.db, -RC.rate); RC.min = -RC.min;

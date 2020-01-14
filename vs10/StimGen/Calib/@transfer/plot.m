@@ -45,6 +45,7 @@ hold on;
 axes(ah2);
 lh(2)=plot(T.Freq/1e3, cunwrap(cangle(T.Ztrf)), varargin{:}); 
 grid on
+xlog125;    %added by HWL on 26.Aug.2019
 ylabel('Phase (cycle)'); 
 xlabel('Frequency (kHz)');
 title(['Wideband delay (not shown): ' num2str(T.WB_delay_ms) ' ms']);

@@ -33,6 +33,11 @@ if isRow,
 else,
     Z = cat(2,varargin{:}).';
     Z = Z(:);
+    % make sure Z is a row vector
+    % added by hwl 2018.02.22
+    if ~isrow(Z)
+        Z = Z';
+    end
 end
 
 

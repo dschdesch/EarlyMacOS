@@ -1,1 +1,4 @@
-vs10/init/EarlyPath.m
+sandbox/*
+*.DS_Store
+*.un~
+*~
